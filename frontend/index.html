@@ -1,0 +1,35 @@
+<html>
+    <body>
+        <video src="" id="video" controls width="320" height="240" autoplay></video>
+
+        <video src="" id="video2" controls width="320" height="240" autoplay></video>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+        <script>
+        var socket = io('http://localhost:5000');
+        socket.on('news', function (data) {
+            console.log(data);
+            socket.emit('test', { my: 'data' });
+        });
+
+        camera(socket);
+
+        socket.on('videoRecive', function(streamUrl) {
+            document.getElementById("video2").src = streamUrl;
+            document.getElementById("video2").play();
+        });
+
+        function camera(socket) {
+            if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: { facingMode: (this.front? "user" : "environment") }}).then(stream => {
+                    var streamUrl = window.URL.createObjectURL(stream)
+                    document.getElementById("video").src = streamUrl;
+                    document.getElementById("video").play();
+                    socket.emit('videoStream', streamUrl);
+                });
+            }
+        }
+        </script>
+    </body>
+</html>
+
