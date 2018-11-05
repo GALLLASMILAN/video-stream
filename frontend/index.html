@@ -1,8 +1,16 @@
 <html>
     <body>
-        <video src="" id="video" controls width="320" height="240" autoplay></video>
+        <video src="" id="video" controls width="320" height="240" autoplay>
+            <source src="somevideo.webm" type="video/webm">
+            <source src="somevideo.mp4" type="video/mp4">
+            I'm sorry; your browser doesn't support HTML5 video in WebM with VP8/VP9 or MP4 with H.264.
+        </video>
 
-        <video src="" id="video2" controls width="320" height="240" autoplay></video>
+        <video src="" id="video2" controls width="320" height="240" autoplay>
+            <source src="somevideo.webm" type="video/webm">
+            <source src="somevideo.mp4" type="video/mp4">
+            I'm sorry; your browser doesn't support HTML5 video in WebM with VP8/VP9 or MP4 with H.264.
+        </video>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
         <script>
@@ -16,15 +24,14 @@
 
         socket.on('videoRecive', function(streamUrl) {
             document.getElementById("video2").src = streamUrl;
-            document.getElementById("video2").play();
         });
 
         function camera(socket) {
             if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 navigator.mediaDevices.getUserMedia({ video: { facingMode: (this.front? "user" : "environment") }}).then(stream => {
                     var streamUrl = window.URL.createObjectURL(stream)
+                    console.log(stream);
                     document.getElementById("video").src = streamUrl;
-                    document.getElementById("video").play();
                     socket.emit('videoStream', streamUrl);
                 });
             }
